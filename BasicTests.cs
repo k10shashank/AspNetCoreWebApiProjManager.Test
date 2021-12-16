@@ -1,4 +1,5 @@
 using AspNetCoreWebApiProjManager.Test.Entities;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,15 +12,18 @@ using Xunit;
 
 namespace AspNetCoreWebApiProjManager.Test
 {
-    public class BasicTests
+    public class BasicTests : IClassFixture<WebApplicationFactory<Startup>>
     {
-        private readonly HttpClient _client = new HttpClient();
-        private readonly string apiUrl = "https://localhost:44377/api";
-        private readonly string appJsonContentType = "application/json; charset=utf-8";
-        private readonly string textPlainContentType = "text/plain; charset=utf-8";
+        private readonly HttpClient _client;
+        private readonly string apiUrl = "api";
         private readonly string notPresentText = "not present.";
         private readonly string isAlreadyPresentText = "ID already present.";
         private readonly string isRequiredText = "is Required.";
+
+        public BasicTests(WebApplicationFactory<Startup> fixture)
+        {
+            _client = fixture.CreateClient();
+        }
 
         [Theory]
         [InlineData("Project")]
